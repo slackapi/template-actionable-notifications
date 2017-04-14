@@ -1,0 +1,17 @@
+{
+  "name": "helpdesk-template",
+  "version": "1.0.0",
+  "description": "Sample Slack app that shows how incoming webhooks and interactive messages can be used to build a simple helpdesk integration",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/index.js"
+  },
+  "author": "Sachin Ranchod <sranchod@slack-corp.com>",
+  "dependencies": {
+    "axios": "^0.16.0",
+    "body-parser": "^1.17.1",
+    "dotenv": "^4.0.0",
+    "express": "^4.15.2",
+    "querystring": "^0.2.0"
+  }
+}
