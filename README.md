@@ -2,6 +2,8 @@
 
 When a helpdesk ticket is created in a 3rd party system, send an actionable notification in Slack that allows the user to claim the ticket or apply a label.
 
+![image](https://user-images.githubusercontent.com/700173/27057774-75973260-4f82-11e7-9e03-9b03e4f6fe41.png)
+
 ## Setup
 
 #### Create a Slack app
