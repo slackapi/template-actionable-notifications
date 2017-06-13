@@ -35,24 +35,28 @@ app.post('/incoming', (req, res) => {
  * 3rd-party system based on the action taken in Slack.
  */
 app.post('/interactive-message', (req, res) => {
-  const { token, actions, callback_id, response_url } = JSON.parse(req.body.payload);
+  const { token, actions, callback_id, response_url, user } = JSON.parse(req.body.payload);
 
-  if (token !== process.env.SLACK_VERIFICATION_TOKEN) {
-    res.sendStatus(500);
-  } else {
+  const updateField = (ticket, field, value) => {
+    ticket.updateField(field, value).then((result) => {
+      const message = `<${ticket.link}|${ticket.title}> ${field} updated!`;
+      sendNotification(template.fill(result), response_url);
+      sendNotification({ text: message });
+    });
+  };
+
+  if (token === process.env.SLACK_VERIFICATION_TOKEN) {
     res.send('');
     const ticket = Ticket.find(callback_id);
     const action = actions[0];
-
     if (ticket) {
-      const selected = action.selected_options[0].value;
-      ticket.updateField(action.name, selected).then((result) => {
-        const message = `<${ticket.link}|${ticket.title}> ${action.name} updated!`;
-        sendNotification(template.fill(result), response_url);
-        sendNotification({ text: message });
-      });
+      if (action.selected_options) {
+        updateField(ticket, action.name, action.selected_options[0].value);
+      } else {
+        updateField(ticket, action.name, user.id);
+      }
     }
-  }
+  } else { res.sendStatus(500); }
 });
 
 app.listen(process.env.PORT, () => {

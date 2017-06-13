@@ -26,10 +26,10 @@ const fill = (ticket) => {
   });
 
   attachment.actions = [{
-    name: 'action',
-    text: 'Action',
+    name: 'agent',
+    text: 'Claim',
     type: 'button',
-    value: 'action',
+    value: 'claim',
   },
   {
     name: 'priority',
