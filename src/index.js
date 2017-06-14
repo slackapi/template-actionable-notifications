@@ -12,6 +12,11 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+app.get('/', (req, res) => {
+  res.send('<h2>The Actionable Notifications app is running</h2> <p>Follow the' +
+  ' instructions in the README to configure the Slack App and your environment variables.</p>');
+});
+
 /*
  * Endpoint where a webhook from a 3rd-party system can post to.
  * Used to notify app of new helpdesk tickets in this case

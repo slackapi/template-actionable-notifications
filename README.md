@@ -15,15 +15,18 @@ When a helpdesk ticket is created in a 3rd party system, send an actionable noti
 1. Activate Incoming Webhooks from the Incoming Webhooks page
 1. Click 'Add New Webhook to Team', install the app and select a channel
 
-#### Clone and run this repo
-1. Clone this repo and run `npm install`
+#### Run locally or [![Remix on Glitch](https://cdn.glitch.com/2703baf2-b643-4da7-ab91-7ee2a2d00b5b%2Fremix-button.svg)](https://glitch.com/edit/#!/remix/slack-actionable-notification-blueprint)
+1. Get the code
+    * Either clone this repo and run `npm install`
+    * Or visit https://glitch.com/edit/#!/remix/slack-actionable-notification-blueprint
 1. Set the following environment variables to `.env` (see `.env.sample`):
     * `SLACK_TOKEN`: Your app's `xoxp-` token (available on the Install App page)
     * `PORT`: The port that you want to run the web server on
     * `SLACK_WEBHOOK`: The webhook URL that you copied off the Incoming Webhook page
     * `SLACK_VERIFICATION_TOKEN`: Your app's Verification Token (available on the Basic Information page)
-1. Start the app (`npm start`)
-1. In another windown, start ngrok on the same port as your webserver (`ngrok http $PORT`)
+1. If you're running the app locally:
+    1. Start the app (`npm start`)
+    1. In another windown, start ngrok on the same port as your webserver (`ngrok http $PORT`)
 
 #### Enable Interactive Messages
 1. Go back to the app settings and click on Interactive Messages.
