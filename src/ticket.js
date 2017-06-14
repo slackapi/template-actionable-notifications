@@ -1,8 +1,15 @@
+const axios = require('axios');
+const template = require('./template');
+const qs = require('querystring');
 const users = require('./users');
 const exampleTicket = require('../ticket.json');
 
 const attributes = ['id', 'link', 'title', 'description'];
 const fields = ['requester', 'status', 'agent', 'priority'];
+
+const webhookNotify = (url, body) => {
+  axios.post(url, body).then(result => console.log(result.data));
+};
 
 class Ticket {
   constructor(options) {
@@ -28,6 +35,11 @@ class Ticket {
     return new Promise((resolve, reject) => {
       users.find(userId).then((result) => {
         this.fields.agent = result.data.user.name;
+        this.chatNotify(result.data.user.id, false).then(r => console.log(r));
+
+        const message = `<${this.link}|${this.title}> updated! Agent ${this.fields.agent} is now assigned`;
+        webhookNotify(process.env.SLACK_WEBHOOK, { text: message });
+
         resolve(this);
       }).catch((err) => { reject(err); });
     });
@@ -35,7 +47,25 @@ class Ticket {
 
   setPriority(priority) {
     this.fields.priority = priority;
+
+    const message = `<${this.link}|${this.title}> updated! Priority is now ${this.fields.priority}`;
+    webhookNotify(process.env.SLACK_WEBHOOK, { text: message });
+
     return Promise.resolve(this);
+  }
+
+  postToChannel(url = process.env.SLACK_WEBHOOK) {
+    webhookNotify(url, template.fill(this));
+  }
+
+  chatNotify(slackUserId, isActionable) {
+    const message = template.fill(this, isActionable);
+    message.attachments = JSON.stringify(message.attachments);
+    message.text = "You've been assigned the following ticket: ";
+
+    const body = Object.assign({ token: process.env.SLACK_TOKEN, channel: slackUserId }, message);
+    const promise = axios.post('https://slack.com/api/chat.postMessage', qs.stringify(body));
+    return promise;
   }
 
   static find(id) {

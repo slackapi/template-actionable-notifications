@@ -1,11 +1,8 @@
 require('dotenv').config();
 
-const axios = require('axios');
 const express = require('express');
 const bodyParser = require('body-parser');
-const template = require('./template');
 const Ticket = require('./ticket');
-const mockTicket = require('../ticket.json');
 
 const app = express();
 
@@ -15,17 +12,13 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-const sendNotification = (body, url = process.env.SLACK_WEBHOOK) => {
-  axios.post(url, body).then(result => console.log(result.data));
-};
-
 /*
  * Endpoint where a webhook from a 3rd-party system can post to.
  * Used to notify app of new helpdesk tickets in this case
  */
 app.post('/incoming', (req, res) => {
-  const ticket = new Ticket(mockTicket);
-  sendNotification(template.fill(ticket));
+  const ticket = new Ticket(req.body);
+  ticket.postToChannel();
   res.sendStatus(200);
 });
 
@@ -37,23 +30,19 @@ app.post('/incoming', (req, res) => {
 app.post('/interactive-message', (req, res) => {
   const { token, actions, callback_id, response_url, user } = JSON.parse(req.body.payload);
 
-  const updateField = (ticket, field, value) => {
-    ticket.updateField(field, value).then((result) => {
-      const message = `<${ticket.link}|${ticket.title}> ${field} updated!`;
-      sendNotification(template.fill(result), response_url);
-      sendNotification({ text: message });
-    });
-  };
-
   if (token === process.env.SLACK_VERIFICATION_TOKEN) {
     res.send('');
     const ticket = Ticket.find(callback_id);
     const action = actions[0];
     if (ticket) {
       if (action.selected_options) {
-        updateField(ticket, action.name, action.selected_options[0].value);
+        ticket.updateField(action.name, action.selected_options[0].value).then(() => {
+          ticket.postToChannel(response_url);
+        });
       } else {
-        updateField(ticket, action.name, user.id);
+        ticket.updateField(action.name, user.id).then(() => {
+          ticket.postToChannel(response_url);
+        });
       }
     }
   } else { res.sendStatus(500); }
