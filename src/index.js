@@ -1,3 +1,5 @@
+'use strict';
+
 require('dotenv').config();
 
 const express = require('express');
@@ -33,7 +35,12 @@ app.post('/incoming', (req, res) => {
  * 3rd-party system based on the action taken in Slack.
  */
 app.post('/interactive-message', (req, res) => {
-  const { token, actions, callback_id, response_url, user } = JSON.parse(req.body.payload);
+  const payload = JSON.parse(req.body.payload);
+  const token = payload.token;
+  const actions = payload.actions;
+  const callback_id = payload.callback_id;
+  const response_url = payload.response_url;
+  const user = payload.user;
 
   if (token === process.env.SLACK_VERIFICATION_TOKEN) {
     res.send('');

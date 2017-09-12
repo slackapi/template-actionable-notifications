@@ -11,7 +11,8 @@ const capitalizeFirstLetter = str => str.charAt(0).toUpperCase() + str.slice(1);
  * @param {object} ticket - JSON representation of the ticket - The title of the book.
  * @param {boolean} isActionable - Should message actions be shown?
  */
-const fill = (ticket, isActionable = true) => {
+const fill = (ticket, isActionable) => {
+  isActionable = isActionable === undefined ? true : isActionable;
   const label = labels.find(l => l.name === ticket.fields.priority);
   const attachment = {
     title: ticket.title,

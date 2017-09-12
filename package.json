@@ -1,12 +1,24 @@
 {
-  "name": "helpdesk-template",
+  "name": "actionable-notification-template",
+  "private": true,
   "version": "1.0.0",
   "description": "Sample Slack app that shows how incoming webhooks and interactive messages can be used to build a simple helpdesk integration",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node src/index.js"
-  },
   "author": "Sachin Ranchod <sranchod@slack-corp.com>",
+  "contributors": [
+    {
+      "name": "Ankur Oberoi",
+      "email": "aoberoi@gmail.com",
+      "url": "https://aoberoi.me"
+    }
+  ],
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "engines": {
+    "node": ">=4.2.0",
+    "npm": ">=2.14.7"
+  },
   "dependencies": {
     "axios": "^0.16.0",
     "body-parser": "^1.17.1",

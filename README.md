@@ -26,7 +26,7 @@ When a helpdesk ticket is created in a 3rd party system, send an actionable noti
     * `SLACK_VERIFICATION_TOKEN`: Your app's Verification Token (available on the Basic Information page)
 1. If you're running the app locally:
     1. Start the app (`npm start`)
-    1. In another windown, start ngrok on the same port as your webserver (`ngrok http $PORT`)
+    1. In another window, start ngrok on the same port as your webserver (`ngrok http $PORT`)
 
 #### Enable Interactive Messages
 1. Go back to the app settings and click on Interactive Messages.
