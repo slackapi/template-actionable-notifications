@@ -1,3 +1,5 @@
+'use strict';
+
 const axios = require('axios');
 const template = require('./template');
 const qs = require('querystring');
@@ -54,8 +56,8 @@ class Ticket {
     return Promise.resolve(this);
   }
 
-  postToChannel(url = process.env.SLACK_WEBHOOK) {
-    webhookNotify(url, template.fill(this));
+  postToChannel(url) {
+    webhookNotify(url || process.env.SLACK_WEBHOOK, template.fill(this));
   }
 
   chatNotify(slackUserId, isActionable) {
