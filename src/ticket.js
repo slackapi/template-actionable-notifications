@@ -5,13 +5,10 @@ const template = require('./template');
 const qs = require('querystring');
 const users = require('./users');
 const exampleTicket = require('../ticket.json');
+const debug = require('debug')('actionable-notifications:ticket');
 
 const attributes = ['id', 'link', 'title', 'description'];
 const fields = ['requester', 'status', 'agent', 'priority'];
-
-const webhookNotify = (url, body) => {
-  axios.post(url, body).then(result => console.log(result.data));
-};
 
 class Ticket {
   constructor(options) {
@@ -21,58 +18,58 @@ class Ticket {
   }
 
   updateField(field, value) {
-    if (fields.indexOf(field) >= 0) {
-      switch (field) {
-        case 'agent': return this.setAgent(value).then(result => result);
-        case 'priority': return this.setPriority(value);
-        default: return null;
-      }
+    if (field === 'agent') {
+      return this.setAgent(value);
+    } else if (field === 'priority') {
+      return this.setPriority(value);
     } else {
-      console.error('Field not part of fields');
-      return null;
+      return Promise.reject(new Error('This field is not a ticket field'));
     }
   }
 
   setAgent(userId) {
-    return new Promise((resolve, reject) => {
-      users.find(userId).then((result) => {
-        this.fields.agent = result.data.user.name;
-        this.chatNotify(result.data.user.id, false).then(r => console.log(r));
+    debug('setting agent');
+    return users.find(userId).then((result) => {
+      this.fields.agent = result.data.user.name;
+      const agentNotification = this.chatNotify(result.data.user.id, false);
 
-        const message = `<${this.link}|${this.title}> updated! Agent ${this.fields.agent} is now assigned`;
-        webhookNotify(process.env.SLACK_WEBHOOK, { text: message });
+      const message = `<${this.link}|${this.title}> updated! Agent ${this.fields.agent} is now assigned`;
+      const channelNotification = axios.post(process.env.SLACK_WEBHOOK, { text: message });
 
-        resolve(this);
-      }).catch((err) => { reject(err); });
+      return Promise.all([agentNotification, channelNotification]);
     });
   }
 
   setPriority(priority) {
+    debug('setting priority');
     this.fields.priority = priority;
 
     const message = `<${this.link}|${this.title}> updated! Priority is now ${this.fields.priority}`;
-    webhookNotify(process.env.SLACK_WEBHOOK, { text: message });
-
-    return Promise.resolve(this);
+    return axios.post(process.env.SLACK_WEBHOOK, { text: message });
   }
 
   postToChannel(url) {
-    webhookNotify(url || process.env.SLACK_WEBHOOK, template.fill(this));
+    debug('posting to channel');
+    return axios.post(url || process.env.SLACK_WEBHOOK, template.fill(this));
   }
 
   chatNotify(slackUserId, isActionable) {
+    debug('notifying in chat');
     const message = template.fill(this, isActionable);
     message.attachments = JSON.stringify(message.attachments);
     message.text = "You've been assigned the following ticket: ";
 
     const body = Object.assign({ token: process.env.SLACK_TOKEN, channel: slackUserId }, message);
-    const promise = axios.post('https://slack.com/api/chat.postMessage', qs.stringify(body));
-    return promise;
+    return axios.post('https://slack.com/api/chat.postMessage', qs.stringify(body));
   }
 
+  /*
+   * Fetch a Ticket from a data store.
+   * NOTE: This method is currently stubbed out for simplicity, there is no backing store.
+   */
   static find(id) {
     return new Ticket(exampleTicket);
   }
 }
 
-module.exports = Ticket;
+module.exports.Ticket = Ticket;
