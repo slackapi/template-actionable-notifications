@@ -26,9 +26,15 @@ app.get('/', (req, res) => {
  */
 app.post('/incoming', (req, res) => {
   debug('an incoming ticket was received');
-  const ticket = new Ticket(req.body);
-  ticket.postToChannel();
-  res.sendStatus(200);
+  Ticket.fromExternal(req.body)
+    .then((ticket) => ticket.postToChannel())
+    .then(() => {
+      res.sendStatus(200);
+    })
+    .catch((error) => {
+      debug(`an error occurred creating the ticket: ${error.message}`);
+      res.status(400).send('The ticket was not created');
+    });
 });
 
 /*
@@ -49,28 +55,20 @@ app.post('/interactive-message', (req, res) => {
     // Immediately respond to signal success, further updates will be done using `response_url`
     res.send('');
 
-    const ticket = Ticket.find(callback_id);
-    const action = actions[0];
-    if (ticket) {
+    Ticket.find(callback_id).then((ticket) => {
       debug('interactive message ticket found');
-      // Initialize a Promise that represents the operations that handle this action
-      let operations = Promise.reject('No operations performed for interactive message');
-      if (action.selected_options) {
-        // Handle message menu actions
-        operations = ticket.updateField(action.name, action.selected_options[0].value).then(() => {
-          debug('updating notification in channel');
-          return ticket.postToChannel(response_url);
-        });
-      } else {
-         // Handle message button actions (Claim button)
-         operations = ticket.updateField(action.name, user.id).then(() => {
-          debug('updating notification in channel');
-          return ticket.postToChannel(response_url);
-        });
-      }
-      // Error handling
-      operations.catch(console.error);
-    }
+      const action = actions[0];
+      const fieldName = action.name;
+      // Handle either message menu action or message button (Claim)
+      const fieldValue = action.selected_options ? action.selected_options[0].value : user.id;
+
+      return ticket.updateField(fieldName, fieldValue).then(() => {
+        debug('updating notification in channel');
+        return ticket.postToChannel(response_url);
+      });
+    })
+    // Error handling
+    .catch(console.error);
   } else {
     debug('check verification token failed');
     res.sendStatus(404);

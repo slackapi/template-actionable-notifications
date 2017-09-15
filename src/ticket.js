@@ -1,6 +1,7 @@
 'use strict';
 
 const axios = require('axios');
+const level = require('level');
 const template = require('./template');
 const qs = require('querystring');
 const users = require('./users');
@@ -10,21 +11,30 @@ const debug = require('debug')('actionable-notifications:ticket');
 const attributes = ['id', 'link', 'title', 'description'];
 const fields = ['requester', 'status', 'agent', 'priority'];
 
+// Initialize ticket store
+const store = level('./data/tickets', { valueEncoding: 'json' });
+
 class Ticket {
-  constructor(options) {
-    this.fields = {};
-    attributes.forEach((attr) => { this[attr] = options[attr]; });
-    fields.forEach((field) => { this.fields[field] = options[field]; });
+
+  constructor(properties) {
+    debug('constructor');
+    for (var prop in properties) {
+      if (properties.hasOwnProperty(prop)) {
+        this[prop] = properties[prop];
+      }
+    }
   }
 
   updateField(field, value) {
+    let update;
     if (field === 'agent') {
-      return this.setAgent(value);
+      update = this.setAgent(value);
     } else if (field === 'priority') {
-      return this.setPriority(value);
+      update = this.setPriority(value);
     } else {
-      return Promise.reject(new Error('This field is not a ticket field'));
+      update = Promise.reject(new Error('This field is not a ticket field'));
     }
+    return update.then(() => this.save());
   }
 
   setAgent(userId) {
@@ -63,12 +73,37 @@ class Ticket {
     return axios.post('https://slack.com/api/chat.postMessage', qs.stringify(body));
   }
 
-  /*
-   * Fetch a Ticket from a data store.
-   * NOTE: This method is currently stubbed out for simplicity, there is no backing store.
-   */
+  save() {
+    debug(`saving id: ${this.id}`);
+    const properties = attributes.reduce((props, attr) => {
+      props[attr] = this[attr];
+      return props;
+    }, { fields: this.fields });
+    return new Promise((resolve, reject) => {
+      store.put(this.id, properties, (error) => {
+        if (error) { return reject(error); }
+        resolve(this);
+      });
+    });
+  }
+
+  static fromExternal(ticketJson) {
+    debug('creating from external JSON');
+    const properties = { fields: {} };
+    attributes.forEach((attr) => { properties[attr] = ticketJson[attr]; });
+    fields.forEach((field) => { properties.fields[field] = ticketJson[field]; });
+    const ticket = new Ticket(properties);
+    return ticket.save();
+  }
+
   static find(id) {
-    return new Ticket(exampleTicket);
+    debug(`fetching id: ${id}`)
+    return new Promise((resolve, reject) => {
+      store.get(id, (error, properties) => {
+        if (error) { return reject(error); }
+        resolve(new Ticket(properties));
+      });
+    });
   }
 }
 
