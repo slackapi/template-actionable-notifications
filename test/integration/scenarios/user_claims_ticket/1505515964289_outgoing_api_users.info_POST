@@ -1,0 +1,34 @@
+POST /api/users.info HTTP/1.1
+accept: application/json, text/plain, */*
+content-type: application/x-www-form-urlencoded
+user-agent: axios/0.16.2
+host: localhost:3000
+connection: close
+
+"token=xoxp-FAKETOKEN&user=U73TN96RM"
+
+-----
+
+HTTP/1.1 200 OK
+content-type: application/json; charset=utf-8
+connection: close
+access-control-allow-origin: *
+cache-control: private, no-cache, no-store, must-revalidate
+date: Fri, 15 Sep 2017 22:52:45 GMT
+expires: Mon, 26 Jul 1997 05:00:00 GMT
+pragma: no-cache
+referrer-policy: no-referrer
+server: Apache
+strict-transport-security: max-age=31536000; includeSubDomains; preload
+vary: Accept-Encoding
+x-accepted-oauth-scopes: users:read
+x-content-type-options: nosniff
+x-oauth-scopes: identify,incoming-webhook,users:read,chat:write:bot
+x-slack-backend: h
+x-slack-req-id: deff986c-e2eb-415a-91e6-a2db7a747229
+x-xss-protection: 0
+x-cache: Miss from cloudfront
+via: 1.1 61331ef33e2394f8b23dbb4d8c6b1c80.cloudfront.net (CloudFront)
+x-amz-cf-id: ONPWm0mmwqfdIsj0mrVgyz1tsL8uRUzUSxPbFLSWY0bqMGnLCMyHfw==
+
+"{\"ok\":true,\"user\":{\"id\":\"U73TN96RM\",\"team_id\":\"T73MR4H8W\",\"name\":\"ankur\",\"deleted\":false,\"color\":\"9f69e7\",\"real_name\":\"Ankur Oberoi\",\"tz\":\"America\\/Los_Angeles\",\"tz_label\":\"Pacific Daylight Time\",\"tz_offset\":-25200,\"profile\":{\"real_name\":\"Ankur Oberoi\",\"display_name\":\"\",\"avatar_hash\":\"g7c3edb9e0c7\",\"real_name_normalized\":\"Ankur Oberoi\",\"display_name_normalized\":\"\",\"image_24\":\"https:\\/\\/secure.gravatar.com\\/avatar\\/7c3edb9e0c7587b2c412c7546ceb0bd0.jpg?s=24&d=https%3A%2F%2Fcfr.slack-edge.com%2F66f9%2Fimg%2Favatars%2Fava_0022-24.png\",\"image_32\":\"https:\\/\\/secure.gravatar.com\\/avatar\\/7c3edb9e0c7587b2c412c7546ceb0bd0.jpg?s=32&d=https%3A%2F%2Fcfr.slack-edge.com%2F66f9%2Fimg%2Favatars%2Fava_0022-32.png\",\"image_48\":\"https:\\/\\/secure.gravatar.com\\/avatar\\/7c3edb9e0c7587b2c412c7546ceb0bd0.jpg?s=48&d=https%3A%2F%2Fcfr.slack-edge.com%2F66f9%2Fimg%2Favatars%2Fava_0022-48.png\",\"image_72\":\"https:\\/\\/secure.gravatar.com\\/avatar\\/7c3edb9e0c7587b2c412c7546ceb0bd0.jpg?s=72&d=https%3A%2F%2Fcfr.slack-edge.com%2F66f9%2Fimg%2Favatars%2Fava_0022-72.png\",\"image_192\":\"https:\\/\\/secure.gravatar.com\\/avatar\\/7c3edb9e0c7587b2c412c7546ceb0bd0.jpg?s=192&d=https%3A%2F%2Fcfr.slack-edge.com%2F7fa9%2Fimg%2Favatars%2Fava_0022-192.png\",\"image_512\":\"https:\\/\\/secure.gravatar.com\\/avatar\\/7c3edb9e0c7587b2c412c7546ceb0bd0.jpg?s=512&d=https%3A%2F%2Fcfr.slack-edge.com%2F7fa9%2Fimg%2Favatars%2Fava_0022-512.png\",\"team\":\"T73MR4H8W\"},\"is_admin\":true,\"is_owner\":true,\"is_primary_owner\":true,\"is_restricted\":false,\"is_ultra_restricted\":false,\"is_bot\":false,\"updated\":1505348566,\"is_app_user\":false,\"has_2fa\":false}}"

@@ -13,7 +13,10 @@
   ],
   "scripts": {
     "start": "node src/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start:record": "SLACK_URL=http://localhost:3000 concurrently --kill-others --names ngrok,steno,app --success last \"ngrok http -subdomain=ansample 3010\" \"node test/launch-steno.js record\" \"node src/index.js\"",
+    "test:unit": "mocha test/unit/*.js",
+    "test:integration": "concurrently --kill-others --names steno,mocha --success first \"node test/launch-steno.js\" \"mocha test/integration/*.js\"",
+    "test": "npm run test:unit && npm run test:integration"
   },
   "engines": {
     "node": ">=4.2.0",
@@ -25,7 +28,11 @@
     "debug": "^3.0.1",
     "dotenv": "^4.0.0",
     "express": "^4.15.2",
-    "level": "^1.7.0",
-    "querystring": "^0.2.0"
+    "level": "^1.7.0"
+  },
+  "devDependencies": {
+    "concurrently": "^3.5.0",
+    "leveldown": "^1.8.0",
+    "mocha": "^3.5.3"
   }
 }

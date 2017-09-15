@@ -2,9 +2,12 @@
 
 require('dotenv').config();
 
+const http = require('http');
 const express = require('express');
 const bodyParser = require('body-parser');
+const level = require('level');
 const Ticket = require('./ticket').Ticket;
+const rewriteUrlForSlack = require('./util').rewriteUrlForSlack;
 const debug = require('debug')('actionable-notifications:index');
 
 const app = express();
@@ -48,7 +51,7 @@ app.post('/interactive-message', (req, res) => {
   const token = payload.token;
   const actions = payload.actions;
   const callback_id = payload.callback_id;
-  const response_url = payload.response_url;
+  const response_url = rewriteUrlForSlack(payload.response_url);
   const user = payload.user;
 
   if (token === process.env.SLACK_VERIFICATION_TOKEN) {
@@ -75,6 +78,55 @@ app.post('/interactive-message', (req, res) => {
   }
 });
 
-app.listen(process.env.PORT, () => {
-  console.log(`App listening on port ${process.env.PORT}!`);
-});
+/*
+ * Augment Express app with functions to start and stop the HTTP server
+ */
+app.start = function (port, ticketStore) {
+  port = port || process.env.PORT;
+  ticketStore = ticketStore || level('./data/tickets', { valueEncoding: 'json' });
+
+  Ticket.setStore(ticketStore);
+
+  return new Promise((resolve, reject) => {
+    app.server = http.createServer(app);
+    function onError(error) {
+      delete app.server;
+      reject(error);
+    }
+    app.server.once('error', onError);
+    app.server.listen(port, () => {
+      app.server.removeListener('error', onError);
+      console.log(`App listening on port ${port}!`);
+      resolve();
+    });
+  });
+};
+
+app.stop = function () {
+  return new Promise((resolve, reject) => {
+    function onError(error) {
+      reject(error);
+    }
+    app.server.once('error', onError);
+    app.server.close((error) => {
+      app.server.removeListener('error', onError);
+      if (error) {
+        return reject(error);
+      }
+      delete app.server;
+      resolve();
+    });
+  });
+};
+
+/*
+ * Export Express app
+ */
+module.exports.app = app;
+
+/*
+ * Start app immediately when run as main
+ */
+if (require.main === module) {
+  app.start();
+}

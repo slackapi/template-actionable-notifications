@@ -35,3 +35,15 @@ When a helpdesk ticket is created in a 3rd party system, send an actionable noti
 #### Send a mock new ticket notification
 1. Post the mock ticket JSON to the /incoming endpoint
     * ``curl -X POST -H 'Content-type: application/json' --data "`cat ./ticket.json`" <ngrok URL + /incoming>``
+
+## Testing
+
+#### Install dependencies
+
+1. Download and install [Steno](https://slackapi.github.io/steno). Move the executable to a location on your `$PATH`.
+   For macOS or Linux, we recommend `/usr/local/bin`.
+
+#### Running
+
+You can run the entire test suite with the command `npm test`. You can run a subset of the tests using either
+`npm run test:unit` or `npm run test:integration`.

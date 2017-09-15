@@ -1,18 +1,17 @@
 'use strict';
 
 const axios = require('axios');
-const level = require('level');
 const template = require('./template');
 const qs = require('querystring');
 const users = require('./users');
-const exampleTicket = require('../ticket.json');
+const slackBaseUrl = require('./util').getSlackBaseUrl();
+const rewriteUrlForSlack = require('./util').rewriteUrlForSlack;
 const debug = require('debug')('actionable-notifications:ticket');
 
 const attributes = ['id', 'link', 'title', 'description'];
 const fields = ['requester', 'status', 'agent', 'priority'];
 
-// Initialize ticket store
-const store = level('./data/tickets', { valueEncoding: 'json' });
+let store = undefined;
 
 class Ticket {
 
@@ -44,7 +43,7 @@ class Ticket {
       const agentNotification = this.chatNotify(result.data.user.id, false);
 
       const message = `<${this.link}|${this.title}> updated! Agent ${this.fields.agent} is now assigned`;
-      const channelNotification = axios.post(process.env.SLACK_WEBHOOK, { text: message });
+      const channelNotification = axios.post(rewriteUrlForSlack(process.env.SLACK_WEBHOOK), { text: message });
 
       return Promise.all([agentNotification, channelNotification]);
     });
@@ -55,12 +54,12 @@ class Ticket {
     this.fields.priority = priority;
 
     const message = `<${this.link}|${this.title}> updated! Priority is now ${this.fields.priority}`;
-    return axios.post(process.env.SLACK_WEBHOOK, { text: message });
+    return axios.post(rewriteUrlForSlack(process.env.SLACK_WEBHOOK), { text: message });
   }
 
   postToChannel(url) {
     debug('posting to channel');
-    return axios.post(url || process.env.SLACK_WEBHOOK, template.fill(this));
+    return axios.post(url || rewriteUrlForSlack(process.env.SLACK_WEBHOOK), template.fill(this));
   }
 
   chatNotify(slackUserId, isActionable) {
@@ -70,7 +69,7 @@ class Ticket {
     message.text = "You've been assigned the following ticket: ";
 
     const body = Object.assign({ token: process.env.SLACK_TOKEN, channel: slackUserId }, message);
-    return axios.post('https://slack.com/api/chat.postMessage', qs.stringify(body));
+    return axios.post(`${ slackBaseUrl }/api/chat.postMessage`, qs.stringify(body));
   }
 
   save() {
@@ -104,6 +103,10 @@ class Ticket {
         resolve(new Ticket(properties));
       });
     });
+  }
+
+  static setStore(newStore) {
+    store = newStore;
   }
 }
 

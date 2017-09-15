@@ -1,4 +1,6 @@
 node_modules
 .env
-data/*
-!data/.gitkeep
+/data/*
+!/data/.gitkeep
+/test/integration/data/*
+!/test/integration/data/.gitkeep

@@ -1,0 +1,27 @@
+POST /services/T73MR4H8W/B73TY596K/FAKEWEBHOOK HTTP/1.1
+accept: application/json, text/plain, */*
+content-type: application/json;charset=utf-8
+user-agent: axios/0.16.2
+host: localhost:3000
+connection: close
+
+"{\"text\":\"<https://somehelpdesk.localhost|Test ticket> updated! Priority is now Low\"}"
+
+-----
+
+HTTP/1.1 200 OK
+content-type: text/html
+connection: close
+access-control-allow-origin: *
+date: Mon, 18 Sep 2017 13:07:20 GMT
+referrer-policy: no-referrer
+server: Apache
+strict-transport-security: max-age=31536000; includeSubDomains; preload
+vary: Accept-Encoding
+x-frame-options: SAMEORIGIN
+x-slack-backend: h
+x-cache: Miss from cloudfront
+via: 1.1 b20a36f6809f60038027cfc2337597fe.cloudfront.net (CloudFront)
+x-amz-cf-id: 4kQ8KWH8EHNWz_v-iHhtMl5-N6z8xZrEe9Px5yHml7o_QLOv7qThfg==
+
+"ok"

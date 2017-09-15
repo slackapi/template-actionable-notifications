@@ -1,0 +1,27 @@
+POST /services/T73MR4H8W/B73TY596K/FAKEWEBHOOK HTTP/1.1
+accept: application/json, text/plain, */*
+content-type: application/json;charset=utf-8
+user-agent: axios/0.16.2
+host: localhost:3000
+connection: close
+
+"{\"attachments\":[{\"title\":\"Test ticket\",\"title_link\":\"https://somehelpdesk.localhost\",\"text\":\"Oh no! Something went wrong and now everything is on fire :fire:\",\"callback_id\":\"1234\",\"color\":\"#c13101\",\"fields\":[{\"title\":\"Requester\",\"value\":\"Bob\",\"short\":true},{\"title\":\"Status\",\"value\":\"Open\",\"short\":true},{\"title\":\"Agent\",\"value\":\"Jane\",\"short\":true},{\"title\":\"Priority\",\"value\":\"High\",\"short\":true}],\"actions\":[{\"name\":\"agent\",\"text\":\"Claim\",\"type\":\"button\",\"value\":\"claim\",\"style\":\"primary\"},{\"name\":\"priority\",\"text\":\"Set a priority\",\"type\":\"select\",\"options\":[{\"text\":\"High\",\"value\":\"High\"},{\"text\":\"Medium\",\"value\":\"Medium\"},{\"text\":\"Low\",\"value\":\"Low\"}]},{\"name\":\"agent\",\"text\":\"Assign agent\",\"type\":\"select\",\"data_source\":\"users\"}]}]}"
+
+-----
+
+HTTP/1.1 200 OK
+content-type: text/html
+connection: close
+access-control-allow-origin: *
+date: Thu, 14 Sep 2017 01:21:46 GMT
+referrer-policy: no-referrer
+server: Apache
+strict-transport-security: max-age=31536000; includeSubDomains; preload
+vary: Accept-Encoding
+x-frame-options: SAMEORIGIN
+x-slack-backend: h
+x-cache: Miss from cloudfront
+via: 1.1 9767e262e4af15c8d83a726bb0f44fa5.cloudfront.net (CloudFront)
+x-amz-cf-id: zruUurBQZELQa_w1WAIbmjMUiW18BWdqaVdbxoYZYc7nRRwd--prHg==
+
+"ok"
