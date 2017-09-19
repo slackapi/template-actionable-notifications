@@ -39,10 +39,10 @@ class Ticket {
   setAgent(userId) {
     debug('setting agent');
     return users.find(userId).then((result) => {
-      this.fields.agent = result.data.user.name;
+      this.fields.agent = result.data.user.id;
       const agentNotification = this.chatNotify(result.data.user.id, false);
 
-      const message = `<${this.link}|${this.title}> updated! Agent ${this.fields.agent} is now assigned`;
+      const message = `<${this.link}|${this.title}> updated! Agent <@${this.fields.agent}> is now assigned`;
       const channelNotification = axios.post(rewriteUrlForSlack(process.env.SLACK_WEBHOOK), { text: message });
 
       return Promise.all([agentNotification, channelNotification]);

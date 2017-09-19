@@ -95,7 +95,7 @@ describe('app', function () {
 
     it('should save the ticket, update the interactive message, DM the new assignee, and update the notification ' +
        'channel when a user claims a ticket from an interactive message', function () {
-      const userWhoPressedClaimButton = 'ankur';
+      const userWhoPressedClaimButton = 'U73TN96RM';
       const messageUpdateUrl = '/actions/T73MR4H8W/242143869092/FAKEACTION';
       const dmUrl = '/api/chat.postMessage'
       const notificationsUrl = url.parse(process.env.SLACK_WEBHOOK).path;
@@ -122,7 +122,7 @@ describe('app', function () {
           const updateContents = JSON.parse(update.request.body);
           const attachment = updateContents.attachments[0];
           const field = attachment.fields.find(field => field.title === 'Agent');
-          assert.equal(field.value, userWhoPressedClaimButton, 'interactive message updated');
+          assert.equal(field.value, `<@${userWhoPressedClaimButton}>`, 'interactive message updated');
 
           // verify the assignee was DMed
           const dm = history.interactions.find(interaction => interaction.request.url === dmUrl);
@@ -134,13 +134,13 @@ describe('app', function () {
           // verify notification channel was updated
           const notification = history.interactions.find(interaction => interaction.request.url === notificationsUrl);
           const notificationContents = JSON.parse(notification.request.body);
-          assert.notEqual(notificationContents.text.indexOf(`Agent ${userWhoPressedClaimButton} is now assigned`), -1);
+          assert.notEqual(notificationContents.text.indexOf(`Agent <@${userWhoPressedClaimButton}> is now assigned`), -1);
         });
     });
 
     it('should save the ticket, update the interactive message, DM the new assignee, and update the notification '+
        'channel when a user assigns a ticket from an interactive message', function () {
-      const userWhoIsAssigned = 'slackbot';
+      const userWhoIsAssigned = 'USLACKBOT';
       const messageUpdateUrl = '/actions/T73MR4H8W/242760108100/FAKEACTION';
       const dmUrl = '/api/chat.postMessage'
       const notificationsUrl = url.parse(process.env.SLACK_WEBHOOK).path;
@@ -167,7 +167,7 @@ describe('app', function () {
           const updateContents = JSON.parse(update.request.body);
           const attachment = updateContents.attachments[0];
           const field = attachment.fields.find(field => field.title === 'Agent');
-          assert.equal(field.value, userWhoIsAssigned, 'interactive message updated');
+          assert.equal(field.value, `<@${userWhoIsAssigned}>`, 'interactive message updated');
 
           // verify the assignee was DMed
           const dm = history.interactions.find(interaction => interaction.request.url === dmUrl);
@@ -179,7 +179,7 @@ describe('app', function () {
           // verify notification channel was updated
           const notification = history.interactions.find(interaction => interaction.request.url === notificationsUrl);
           const notificationContents = JSON.parse(notification.request.body);
-          assert.notEqual(notificationContents.text.indexOf(`Agent ${userWhoIsAssigned} is now assigned`), -1);
+          assert.notEqual(notificationContents.text.indexOf(`Agent <@${userWhoIsAssigned}> is now assigned`), -1);
         });
     });
 

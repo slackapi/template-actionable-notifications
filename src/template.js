@@ -27,7 +27,7 @@ const fill = (ticket, isActionable) => {
   Object.keys(ticket.fields).forEach((key) => {
     attachment.fields.push({
       title: capitalizeFirstLetter(key),
-      value: ticket.fields[key],
+      value: key === 'agent' ? `<@${ticket.fields[key]}>` : ticket.fields[key],
       short: true,
     });
   });

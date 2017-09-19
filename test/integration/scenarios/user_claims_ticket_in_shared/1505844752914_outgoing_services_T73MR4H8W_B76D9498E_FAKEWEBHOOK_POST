@@ -5,7 +5,7 @@ user-agent: axios/0.16.2
 host: localhost:3000
 connection: close
 
-"{\"text\":\"<https://somehelpdesk.localhost|Test ticket> updated! Agent aoberoi_sc_ankur_exte is now assigned\"}"
+"{\"text\":\"<https://somehelpdesk.localhost|Test ticket> updated! Agent <@U75DB2H43> is now assigned\"}"
 
 -----
 
