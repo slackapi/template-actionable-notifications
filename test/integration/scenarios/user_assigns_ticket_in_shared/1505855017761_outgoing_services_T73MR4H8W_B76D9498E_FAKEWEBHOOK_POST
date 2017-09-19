@@ -1,0 +1,27 @@
+POST /services/T73MR4H8W/B76D9498E/FAKEWEBHOOK HTTP/1.1
+accept: application/json, text/plain, */*
+content-type: application/json;charset=utf-8
+user-agent: axios/0.16.2
+host: localhost:3000
+connection: close
+
+"{\"text\":\"<https://somehelpdesk.localhost|Test ticket> updated! Agent aoberoi_sc_bob_extern is now assigned\"}"
+
+-----
+
+HTTP/1.1 200 OK
+content-type: text/html
+connection: close
+access-control-allow-origin: *
+date: Tue, 19 Sep 2017 21:03:37 GMT
+referrer-policy: no-referrer
+server: Apache
+strict-transport-security: max-age=31536000; includeSubDomains; preload
+vary: Accept-Encoding
+x-frame-options: SAMEORIGIN
+x-slack-backend: h
+x-cache: Miss from cloudfront
+via: 1.1 85359b00dd31672f055ad3cc68c51eff.cloudfront.net (CloudFront)
+x-amz-cf-id: iwv_KKU5ib5Kfr0GZVP66cbLcI3vC_NI9YKaRss8bsz3hrXc1BY20g==
+
+"ok"

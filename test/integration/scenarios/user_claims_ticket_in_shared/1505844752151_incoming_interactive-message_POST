@@ -1,0 +1,21 @@
+POST /interactive-message HTTP/1.1
+user-agent: Slackbot 1.0 (+https://api.slack.com/robots)
+host: ansample.ngrok.io
+accept-encoding: gzip,deflate
+accept: application/json,*/*
+content-type: application/x-www-form-urlencoded
+x-forwarded-proto: https
+x-forwarded-for: 52.90.121.46
+
+"payload=%7B%22actions%22%3A%5B%7B%22name%22%3A%22agent%22%2C%22type%22%3A%22button%22%2C%22value%22%3A%22claim%22%7D%5D%2C%22callback_id%22%3A%221234%22%2C%22team%22%3A%7B%22id%22%3A%22T73MR4H8W%22%2C%22domain%22%3A%22ankur-dev%22%7D%2C%22channel%22%3A%7B%22id%22%3A%22C75KQ7WJ1%22%2C%22name%22%3A%22tickets-shared%22%7D%2C%22user%22%3A%7B%22id%22%3A%22U75DB2H43%22%2C%22name%22%3A%22aoberoi_sc_ankur_exte%22%2C%22team_id%22%3A%22T0JFD6M53%22%7D%2C%22action_ts%22%3A%221505844752.013366%22%2C%22message_ts%22%3A%221505844684.000363%22%2C%22attachment_id%22%3A%221%22%2C%22token%22%3A%22FAKEVERIFICATIONTOKEN%22%2C%22is_app_unfurl%22%3Afalse%2C%22original_message%22%3A%7B%22text%22%3A%22%22%2C%22bot_id%22%3A%22B76D9498E%22%2C%22attachments%22%3A%5B%7B%22callback_id%22%3A%221234%22%2C%22text%22%3A%22Oh+no%21+Something+went+wrong+and+now+everything+is+on+fire+%3Afire%3A%22%2C%22title%22%3A%22Test+ticket%22%2C%22id%22%3A1%2C%22title_link%22%3A%22https%3A%5C%2F%5C%2Fsomehelpdesk.localhost%22%2C%22color%22%3A%22c13101%22%2C%22fields%22%3A%5B%7B%22title%22%3A%22Requester%22%2C%22value%22%3A%22Bob%22%2C%22short%22%3Atrue%7D%2C%7B%22title%22%3A%22Status%22%2C%22value%22%3A%22Open%22%2C%22short%22%3Atrue%7D%2C%7B%22title%22%3A%22Agent%22%2C%22value%22%3A%22Jane%22%2C%22short%22%3Atrue%7D%2C%7B%22title%22%3A%22Priority%22%2C%22value%22%3A%22High%22%2C%22short%22%3Atrue%7D%5D%2C%22actions%22%3A%5B%7B%22id%22%3A%221%22%2C%22name%22%3A%22agent%22%2C%22text%22%3A%22Claim%22%2C%22type%22%3A%22button%22%2C%22value%22%3A%22claim%22%2C%22style%22%3A%22primary%22%7D%2C%7B%22id%22%3A%222%22%2C%22name%22%3A%22priority%22%2C%22text%22%3A%22Set+a+priority%22%2C%22type%22%3A%22select%22%2C%22data_source%22%3A%22static%22%2C%22options%22%3A%5B%7B%22text%22%3A%22High%22%2C%22value%22%3A%22High%22%7D%2C%7B%22text%22%3A%22Medium%22%2C%22value%22%3A%22Medium%22%7D%2C%7B%22text%22%3A%22Low%22%2C%22value%22%3A%22Low%22%7D%5D%7D%2C%7B%22id%22%3A%223%22%2C%22name%22%3A%22agent%22%2C%22text%22%3A%22Assign+agent%22%2C%22type%22%3A%22select%22%2C%22data_source%22%3A%22users%22%7D%5D%2C%22fallback%22%3A%22Test+ticket%22%7D%5D%2C%22type%22%3A%22message%22%2C%22subtype%22%3A%22bot_message%22%2C%22team%22%3A%22T0JFD6M53%22%2C%22ts%22%3A%221505844684.000363%22%7D%2C%22response_url%22%3A%22https%3A%5C%2F%5C%2Fhooks.slack.com%5C%2Factions%5C%2FT73MR4H8W%5C%2F243622838500%5C%2FFAKEACTION%22%2C%22trigger_id%22%3A%22243491323187.241739153302.c6efd3cb2be1ab0f28e0713ba28278f1%22%7D"
+
+-----
+
+HTTP/1.1 200 OK
+x-powered-by: Express
+content-type: text/html; charset=utf-8
+etag: W/"0-2jmj7l5rSw0yVb/vlWAYkK/YBwk"
+date: Tue, 19 Sep 2017 18:12:32 GMT
+connection: close
+
+""
