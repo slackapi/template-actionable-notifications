@@ -13,7 +13,7 @@ When a helpdesk ticket is created in a 3rd party system, send an actionable noti
     * `users:read`
     * `chat:write:bot`
 1. Activate Incoming Webhooks from the Incoming Webhooks page
-1. Click 'Add New Webhook to Team', install the app and select a channel
+1. Click 'Add New Webhook to Workspace', install the app and select a channel
 
 #### Run locally or [![Remix on Glitch](https://cdn.glitch.com/2703baf2-b643-4da7-ab91-7ee2a2d00b5b%2Fremix-button.svg)](https://glitch.com/edit/#!/remix/slack-actionable-notification-blueprint)
 1. Get the code
@@ -28,8 +28,8 @@ When a helpdesk ticket is created in a 3rd party system, send an actionable noti
     1. Start the app (`npm start`)
     1. In another window, start ngrok on the same port as your webserver (`ngrok http $PORT`)
 
-#### Enable Interactive Messages
-1. Go back to the app settings and click on Interactive Messages.
+#### Enable Interactive Components
+1. Go back to the app settings and click on Interactive Components.
 1. Set the Request URL to your ngrok URL + /interactive-message
 
 #### Send a mock new ticket notification
