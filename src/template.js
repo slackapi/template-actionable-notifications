@@ -13,48 +13,71 @@ const capitalizeFirstLetter = str => str.charAt(0).toUpperCase() + str.slice(1);
  */
 const fill = (ticket, isActionable) => {
   isActionable = isActionable === undefined ? true : isActionable;
-  const label = labels.find(l => l.name === ticket.fields.priority);
-  const attachment = {
-    title: ticket.title,
-    title_link: ticket.link,
-    text: ticket.description,
-    callback_id: ticket.id,
-    color: (label && label.color) || '#3b6e7f',
-  };
 
-  attachment.fields = [];
+  let header_block = {
+    type: "section",
+    text: {
+      type: "mrkdwn",
+      text: `<${ticket.link}|${ticket.title}>\n${ticket.description}`
+    },
+  }
+
+  if (isActionable) {
+    // Add a claim button to the message
+    header_block.accessory = {
+      type: "button",
+      action_id: `claim.${ticket.id}`,
+      text: {
+        type: "plain_text",
+        text: "Claim"
+      }
+    };
+  }
+
+  let blocks = [header_block];
+
+
+  let field_blocks = [];
 
   Object.keys(ticket.fields).forEach((key) => {
-    attachment.fields.push({
-      title: capitalizeFirstLetter(key),
-      value: ticket.fields[key],
-      short: true,
+    field_blocks.push({
+      type: "mrkdwn",
+      text: `*${capitalizeFirstLetter(key)}* \n ${ticket.fields[key]} `
     });
   });
 
+  blocks.push({
+    type: "section",
+    fields: field_blocks
+  });
+
   if (isActionable) {
-    attachment.actions = [{
-      name: 'agent',
-      text: 'Claim',
-      type: 'button',
-      value: 'claim',
-      style: 'primary',
-    },
-    {
-      name: 'priority',
-      text: 'Set a priority',
-      type: 'select',
-      options: labels.map(l => ({ text: l.name, value: l.name })),
-    },
-    {
-      name: 'agent',
-      text: 'Assign agent',
-      type: 'select',
-      data_source: 'users',
-    }];
+    blocks.push({
+      type: "actions",
+      elements: [
+        {
+          type: "users_select",
+          action_id: `agent.${ticket.id}`,
+          placeholder: {
+            type: "plain_text",
+            text: "Assign agent"
+          }
+        },
+        {
+          type: "static_select",
+          action_id: `priority.${ticket.id}`,
+          placeholder: {
+            type: "plain_text",
+            text: "Set a priority"
+          },
+          options: labels.map(l => ({ text: { type: "plain_text", text: l.name }, value: l.name }))
+        }
+      ]
+    }
+    );
   }
 
-  return { attachments: [attachment] };
+  return blocks;
 };
 
 module.exports = { fill };
