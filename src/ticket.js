@@ -60,16 +60,25 @@ class Ticket {
 
   postToChannel(url) {
     debug('posting to channel');
-    return axios.post(url || process.env.SLACK_WEBHOOK, template.fill(this));
+    return axios.post(url || process.env.SLACK_WEBHOOK, { text: "You have a new ticket", blocks: template.fill(this) });
   }
 
   chatNotify(slackUserId, isActionable) {
     debug('notifying in chat');
-    const message = template.fill(this, isActionable);
-    message.attachments = JSON.stringify(message.attachments);
-    message.text = "You've been assigned the following ticket: ";
-
-    const body = Object.assign({ token: process.env.SLACK_TOKEN, channel: slackUserId }, message);
+    var message = template.fill(this, isActionable);
+    message.unshift(
+      {
+        type: "section",
+        text: {
+          type: "plain_text",
+          text: "You've been assigned a ticket"
+        }
+      },
+      {
+        type: "divider"
+      }
+    );
+    const body = Object.assign({ token: process.env.SLACK_TOKEN, channel: slackUserId, blocks: JSON.stringify(message), text: "You have a new ticket" });
     return axios.post('https://slack.com/api/chat.postMessage', qs.stringify(body));
   }
 

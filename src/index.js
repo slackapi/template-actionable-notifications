@@ -17,7 +17,7 @@ app.use(bodyParser.json());
 
 app.get('/', (req, res) => {
   res.send('<h2>The Actionable Notifications app is running</h2> <p>Follow the' +
-  ' instructions in the README to configure the Slack App and your environment variables.</p>');
+    ' instructions in the README to configure the Slack App and your environment variables.</p>');
 });
 
 /*
@@ -47,28 +47,42 @@ app.post('/interactive-message', (req, res) => {
   const payload = JSON.parse(req.body.payload);
   const token = payload.token;
   const actions = payload.actions;
-  const callback_id = payload.callback_id;
+  const action_id = actions[0].action_id;
+  const action_array = action_id.split(".");
+  let fieldName = action_array[0];
+  const ticket_id = action_array[1];
   const response_url = payload.response_url;
   const user = payload.user;
 
   if (token === process.env.SLACK_VERIFICATION_TOKEN) {
     // Immediately respond to signal success, further updates will be done using `response_url`
     res.send('');
-
-    Ticket.find(callback_id).then((ticket) => {
+    Ticket.find(ticket_id).then((ticket) => {
       debug('interactive message ticket found');
       const action = actions[0];
-      const fieldName = action.name;
-      // Handle either message menu action or message button (Claim)
-      const fieldValue = action.selected_options ? action.selected_options[0].value : user.id;
+      switch (fieldName) {
+        case 'claim':
+          fieldName = 'agent';
+          let fieldValue = user.id;
+          break;
+        case 'agent':
+          let fieldValue = action.selected_user;
+          break;
+        case 'priority':
+          let fieldValue = action.selected_option.value;
+          break;
+        default:
+          debug('Unknown field name!');
+          return;
+      }
 
       return ticket.updateField(fieldName, fieldValue).then(() => {
         debug('updating notification in channel');
         return ticket.postToChannel(response_url);
       });
     })
-    // Error handling
-    .catch(console.error);
+      // Error handling
+      .catch(console.error);
   } else {
     debug('check verification token failed');
     res.sendStatus(404);
