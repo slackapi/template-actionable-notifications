@@ -29,6 +29,7 @@ When a helpdesk ticket is created in a 3rd party system, send an actionable noti
 #### Run the app
 
 Clone this repo to run locally or 
+
 [![Remix on Glitch](https://cdn.glitch.com/2703baf2-b643-4da7-ab91-7ee2a2d00b5b%2Fremix-button.svg)](https://glitch.com/edit/#!/remix/slack-actionable-notification-blueprint)
 
 1. Get the code
