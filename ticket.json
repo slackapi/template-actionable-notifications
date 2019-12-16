@@ -3,8 +3,8 @@
   "link": "https://somehelpdesk.localhost",
   "title": "Test ticket",
   "description": "Oh no! Something went wrong and now everything is on fire :fire:",
-  "requester": "Bob",
+  "requester": "Leia",
   "status": "Open",
-  "agent": "Jane",
+  "agent": "Chewy",
   "priority": "High"
 }

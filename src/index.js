@@ -4,6 +4,7 @@ require('dotenv').config();
 
 const express = require('express');
 const bodyParser = require('body-parser');
+const signature = require('./verifySignature');
 const Ticket = require('./ticket').Ticket;
 const debug = require('debug')('actionable-notifications:index');
 
@@ -11,9 +12,19 @@ const app = express();
 
 /*
  * Parse application/x-www-form-urlencoded && application/json
+ * Use body-parser's `verify` callback to export a parsed raw body
+ * that you need to use to verify the signature
  */
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+
+const rawBodyBuffer = (req, res, buf, encoding) => {
+  if (buf && buf.length) {
+    req.rawBody = buf.toString(encoding || 'utf8');
+  }
+};
+
+app.use(bodyParser.urlencoded({verify: rawBodyBuffer, extended: true }));
+app.use(bodyParser.json({ verify: rawBodyBuffer }));
+
 
 app.get('/', (req, res) => {
   res.send('<h2>The Actionable Notifications app is running</h2> <p>Follow the' +
@@ -44,32 +55,43 @@ app.post('/incoming', (req, res) => {
  */
 app.post('/interactive-message', (req, res) => {
   debug('an interactive message action was received');
+  
   const payload = JSON.parse(req.body.payload);
-  const token = payload.token;
-  const actions = payload.actions;
-  const action_id = actions[0].action_id;
+  
+  const { token, actions, response_url, user } = payload;
+  
+  console.log(payload);
+  
+  const action = actions[0];
+  const action_id = action.action_id;
   const action_array = action_id.split(".");
-  let fieldName = action_array[0];
   const ticket_id = action_array[1];
-  const response_url = payload.response_url;
-  const user = payload.user;
 
-  if (token === process.env.SLACK_VERIFICATION_TOKEN) {
+  let fieldName = action_array[0];
+
+  if (!signature.isVerified(req)) {
+    res.sendStatus(404);
+    return;
+  }
+  else {
     // Immediately respond to signal success, further updates will be done using `response_url`
     res.send('');
+    
     Ticket.find(ticket_id).then((ticket) => {
       debug('interactive message ticket found');
-      const action = actions[0];
+      
+      let fieldValue = '';
+      
       switch (fieldName) {
         case 'claim':
           fieldName = 'agent';
-          let fieldValue = user.id;
+          fieldValue = user.id;
           break;
         case 'agent':
-          let fieldValue = action.selected_user;
+          fieldValue = action.selected_user;
           break;
         case 'priority':
-          let fieldValue = action.selected_option.value;
+          fieldValue = action.selected_option.value;
           break;
         default:
           debug('Unknown field name!');
@@ -83,12 +105,9 @@ app.post('/interactive-message', (req, res) => {
     })
       // Error handling
       .catch(console.error);
-  } else {
-    debug('check verification token failed');
-    res.sendStatus(404);
-  }
+  } 
 });
 
-app.listen(process.env.PORT, () => {
-  console.log(`App listening on port ${process.env.PORT}!`);
+const server = app.listen(process.env.PORT || 5000, () => { 
+  console.log('Express server listening on port %d in %s mode', server.address().port, app.settings.env);
 });
