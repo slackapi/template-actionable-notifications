@@ -55,6 +55,6 @@ Post the mock ticket JSON to the `/incoming` endpoint:
 ``curl -X POST -H 'Content-type: application/json' --data "`cat ./ticket.json`" <Your app server URL + /incoming>``
 
 Example:
-``curl -X POST -H 'Content-type: application/json' --data "`cat ./ticket.json`" https://slack-actionable-notification-blueprint.glitch.me/incoming``
+``curl -X POST -H 'Content-type: application/json' --data "`cat ./ticket.json`" https://my-project.glitch.me/incoming``
 
 *You need the ticket.json file in the same directory where you are sending the curl command!*
