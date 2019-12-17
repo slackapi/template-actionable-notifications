@@ -7,6 +7,8 @@ Changes:
   * The bot permission scopes have become more granular
   * Block Kit is replacing the previous way to compose message UI
 
+Read [diff.md](diff.md) for more info!
+
 ---
 
 When a helpdesk ticket is created in a 3rd party system, send an actionable notification in Slack that allows the user to claim the ticket or apply a label.
