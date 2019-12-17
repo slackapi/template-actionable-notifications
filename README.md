@@ -3,7 +3,8 @@
 > :sparkles: *Updated December 2019: As we have introduced some new features, this tutorial and the code samples have been updated!*
 
 Changes:
-  * Permission scopes are now more granular 
+  * Using bot token (xoxb) instead of the user token
+  * The bot permission scopes have become more granular
   * Block Kit is replacing the previous way to compose message UI
 
 ---
@@ -18,25 +19,22 @@ When a helpdesk ticket is created in a 3rd party system, send an actionable noti
 
 1. Create an app at api.slack.com/apps
 1. Activate Incoming Webhooks from the Features > **Incoming Webhooks** then click 'Add New Webhook to Workspace', install the app and select a channel
-1. Navigate to the **OAuth & Permissions** page and add the following scopes:
-  * **Bot scopes**
+1. Navigate to the **OAuth & Permissions** page and add the following **bot** scopes:
     * `incoming-webhook` (This should be pre-selected)
     * `chat:write` (to send messages)
-  * **User scope** 
     * `users:read` (to read users info)
   
 
 #### Run the app
 
 Clone this repo to run locally or 
-
 [![Remix on Glitch](https://cdn.glitch.com/2703baf2-b643-4da7-ab91-7ee2a2d00b5b%2Fremix-button.svg)](https://glitch.com/edit/#!/remix/slack-actionable-notification-blueprint)
 
 1. Get the code
     * Either clone this repo and run `npm install`
     * Or visit https://glitch.com/edit/#!/remix/slack-actionable-notification-blueprint
 1. Set the following environment variables to `.env` (see `.env.sample`):
-    * `SLACK_TOKEN`: Your app's `xoxp-` token (available on the **OAuth & Permissions**)
+    * `SLACK_TOKEN`: Your app's `xoxb-` token (available on the **OAuth & Permissions**)
     * `SLACK_WEBHOOK`: The webhook URL that you copied off the **Incoming Webhook**
     * `SLACK_SIGNING_SECRET`: Your app's Signing secret (available on the **Basic Information**)
 1. If you're running the app locally:
@@ -55,6 +53,6 @@ Post the mock ticket JSON to the `/incoming` endpoint:
 ``curl -X POST -H 'Content-type: application/json' --data "`cat ./ticket.json`" <Your app server URL + /incoming>``
 
 Example:
-``curl -X POST -H 'Content-type: application/json' --data "`cat ./ticket.json`" https://my-project.glitch.me/incoming``
+``curl -X POST -H 'Content-type: application/json' --data "`cat ./ticket.json`" https://slack-actionable-notification-blueprint.glitch.me/incoming``
 
 *You need the ticket.json file in the same directory where you are sending the curl command!*
