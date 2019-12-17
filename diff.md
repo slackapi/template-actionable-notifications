@@ -23,6 +23,13 @@ We recommend selecting only the scopes your app needs. Requesting too many scope
 
 Please read [Scopes and permissions](https://api.slack.com/scopes) to figure out which scopes you need. 
 
+## Block Kit
+
+We introduced Block Kit UI framework that allows you to create messages with the components called blocks. 
+If you have been creating messages with the legacy "attatchment", please consider switching to Block Kit! 
+
+Read more at: [Block Kit](https://api.slack.com/block-kit)
+
 ---
 ## Changes made in October 2018
 
