@@ -43,6 +43,7 @@ app.post('/incoming', (req, res) => {
       res.sendStatus(200);
     })
     .catch((error) => {
+      console.log(error)
       debug(`an error occurred creating the ticket: ${error.message}`);
       res.status(400).send('The ticket was not created');
     });
