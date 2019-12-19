@@ -24,7 +24,7 @@ When a helpdesk ticket is created in a 3rd party system, send an actionable noti
 1. Navigate to the **OAuth & Permissions** page and add the following **bot** scopes:
     * `incoming-webhook` (This should be pre-selected)
     * `chat:write` (to send messages)
-    * `users:read` (to read users info)
+    * `im:write` (to open a DM channel between your bot and a user)
   
 
 #### Run the app
