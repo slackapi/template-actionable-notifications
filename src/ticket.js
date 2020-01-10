@@ -1,7 +1,7 @@
 'use strict';
 
 const axios = require('axios');
-const level = require('level');
+const db = require('node-json-db');
 const template = require('./template');
 const qs = require('querystring');
 const debug = require('debug')('actionable-notifications:ticket');
@@ -10,7 +10,7 @@ const attributes = ['id', 'link', 'title', 'description'];
 const fields = ['requester', 'status', 'agent', 'priority'];
 
 // Initialize ticket store
-const store = level('./data/tickets', { valueEncoding: 'json' });
+const store = new db.JsonDB('tickets', true, false);
 
 class Ticket {
 
@@ -37,7 +37,7 @@ class Ticket {
 
   setAgent (userId) {
     debug('setting agent');
-    const agentNotification = this.chatNotify(result.data.user.id, false);
+    const agentNotification = this.chatNotify(userId, false);
 
     const message = `<${this.link}|${this.title}> updated! Agent <@${userId}> is now assigned`;
     const channelNotification = axios.post(process.env.SLACK_WEBHOOK, { text: message });
@@ -55,7 +55,7 @@ class Ticket {
 
   postToChannel (url) {
     debug('posting to channel');
-    return axios.post(url || process.env.SLACK_WEBHOOK, { text: 'You have a new ticket', blocks: template.fill(this) });
+    return axios.post(url || process.env.SLACK_WEBHOOK, { text: 'You have a new ticket', blocks: template.fill(this), replace_original: true });
   }
 
   chatNotify (slackUserId, isActionable) {
@@ -77,8 +77,10 @@ class Ticket {
       token: process.env.SLACK_TOKEN,
       user: slackUserId
     })).then(result => {
-      const body = { token: process.env.SLACK_TOKEN, channel: result.data.channel.id, blocks: JSON.stringify(message), text: 'You have a new ticket' };
-      return axios.post('https://slack.com/api/chat.postMessage', qs.stringify(body));
+      if (result.data.ok) {
+        const body = { token: process.env.SLACK_TOKEN, channel: result.data.channel.id, blocks: JSON.stringify(message), text: 'You have a new ticket' };
+        return axios.post('https://slack.com/api/chat.postMessage', qs.stringify(body));
+      }
     })
 
   }
@@ -89,11 +91,10 @@ class Ticket {
       props[attr] = this[attr];
       return props;
     }, { fields: this.fields });
+
     return new Promise((resolve, reject) => {
-      store.put(this.id, properties, (error) => {
-        if (error) { return reject(error); }
-        resolve(this);
-      });
+      store.push(`/${this.id}`, properties);
+      resolve(this);
     });
   }
 
@@ -107,12 +108,10 @@ class Ticket {
   }
 
   static find (id) {
-    debug(`fetching id: ${id}`)
+    debug(`fetching id: ${id}`);
     return new Promise((resolve, reject) => {
-      store.get(id, (error, properties) => {
-        if (error) { return reject(error); }
-        resolve(new Ticket(properties));
-      });
+      let properties = store.getData(`/${id}`);
+      resolve(new Ticket(properties));
     });
   }
 }
