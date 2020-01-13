@@ -22,7 +22,7 @@ const rawBodyBuffer = (req, res, buf, encoding) => {
   }
 };
 
-app.use(bodyParser.urlencoded({verify: rawBodyBuffer, extended: true }));
+app.use(bodyParser.urlencoded({ verify: rawBodyBuffer, extended: true }));
 app.use(bodyParser.json({ verify: rawBodyBuffer }));
 
 
@@ -43,6 +43,7 @@ app.post('/incoming', (req, res) => {
       res.sendStatus(200);
     })
     .catch((error) => {
+      console.log(error)
       debug(`an error occurred creating the ticket: ${error.message}`);
       res.status(400).send('The ticket was not created');
     });
@@ -55,59 +56,52 @@ app.post('/incoming', (req, res) => {
  */
 app.post('/interactive-message', (req, res) => {
   debug('an interactive message action was received');
-  
+  if (!signature.isVerified(req)) return res.status(404).send();
+
+  // Immediately respond to signal success, further updates will be done using `response_url`
+  res.send('');
+
   const payload = JSON.parse(req.body.payload);
-  
-  const { token, actions, response_url, user } = payload;
-  
-  console.log(payload);
-  
+  const { actions, response_url, user } = payload;
+
   const action = actions[0];
   const action_id = action.action_id;
-  const action_array = action_id.split(".");
+  const action_array = action_id.split('.');
   const ticket_id = action_array[1];
 
   let fieldName = action_array[0];
 
-  if (!signature.isVerified(req)) {
-    res.sendStatus(404);
-    return;
-  }
-  else {
-    // Immediately respond to signal success, further updates will be done using `response_url`
-    res.send('');
-    
-    Ticket.find(ticket_id).then((ticket) => {
-      debug('interactive message ticket found');
-      
-      let fieldValue = '';
-      
-      switch (fieldName) {
-        case 'claim':
-          fieldName = 'agent';
-          fieldValue = user.id;
-          break;
-        case 'agent':
-          fieldValue = action.selected_user;
-          break;
-        case 'priority':
-          fieldValue = action.selected_option.value;
-          break;
-        default:
-          debug('Unknown field name!');
-          return;
-      }
+  Ticket.find(ticket_id).then((ticket) => {
+    debug('interactive message ticket found');
 
-      return ticket.updateField(fieldName, fieldValue).then(() => {
-        debug('updating notification in channel');
-        return ticket.postToChannel(response_url);
-      });
-    })
-      // Error handling
-      .catch(console.error);
-  } 
+    let fieldValue = '';
+
+    switch (fieldName) {
+      case 'claim':
+        fieldName = 'agent';
+        fieldValue = user.id;
+        break;
+      case 'agent':
+        fieldValue = action.selected_user;
+        break;
+      case 'priority':
+        fieldValue = action.selected_option.value;
+        break;
+      default:
+        debug('Unknown field name!');
+        return;
+    }
+
+    return ticket.updateField(fieldName, fieldValue).then(() => {
+      debug('updating notification in channel');
+      return ticket.postToChannel(response_url);
+    });
+  })
+    // Error handling
+    .catch(console.error);
+
 });
 
-const server = app.listen(process.env.PORT || 5000, () => { 
+const server = app.listen(process.env.PORT || 5000, () => {
   console.log('Express server listening on port %d in %s mode', server.address().port, app.settings.env);
 });

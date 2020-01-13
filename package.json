@@ -18,11 +18,8 @@
   ],
   "scripts": {
     "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "engines": {
-    "node": ">=4.2.0",
-    "npm": ">=2.14.7"
   },
   "dependencies": {
     "axios": "^0.19.0",
@@ -30,8 +27,11 @@
     "debug": "^4.1.1",
     "dotenv": "^6.2.0",
     "express": "^4.17.1",
-    "level": "^4.0.0",
+    "node-json-db": "^1.0.3",
     "querystring": "^0.2.0",
     "tsscmp": "^1.0.6"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.2"
   }
 }

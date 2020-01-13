@@ -15,9 +15,9 @@ const fill = (ticket, isActionable) => {
   isActionable = isActionable === undefined ? true : isActionable;
 
   let header_block = {
-    type: "section",
+    type: 'section',
     text: {
-      type: "mrkdwn",
+      type: 'mrkdwn',
       text: `<${ticket.link}|${ticket.title}>\n${ticket.description}`
     },
   }
@@ -25,11 +25,11 @@ const fill = (ticket, isActionable) => {
   if (isActionable) {
     // Add a claim button to the message
     header_block.accessory = {
-      type: "button",
+      type: 'button',
       action_id: `claim.${ticket.id}`,
       text: {
-        type: "plain_text",
-        text: "Claim"
+        type: 'plain_text',
+        text: 'Claim'
       }
     };
   }
@@ -41,36 +41,36 @@ const fill = (ticket, isActionable) => {
 
   Object.keys(ticket.fields).forEach((key) => {
     field_blocks.push({
-      type: "mrkdwn",
+      type: 'mrkdwn',
       text: `*${capitalizeFirstLetter(key)}* \n ${ticket.fields[key]} `
     });
   });
 
   blocks.push({
-    type: "section",
+    type: 'section',
     fields: field_blocks
   });
 
   if (isActionable) {
     blocks.push({
-      type: "actions",
+      type: 'actions',
       elements: [
         {
-          type: "users_select",
+          type: 'users_select',
           action_id: `agent.${ticket.id}`,
           placeholder: {
-            type: "plain_text",
-            text: "Assign agent"
+            type: 'plain_text',
+            text: 'Assign agent'
           }
         },
         {
-          type: "static_select",
+          type: 'static_select',
           action_id: `priority.${ticket.id}`,
           placeholder: {
-            type: "plain_text",
-            text: "Set a priority"
+            type: 'plain_text',
+            text: 'Set a priority'
           },
-          options: labels.map(l => ({ text: { type: "plain_text", text: l.name }, value: l.name }))
+          options: labels.map(l => ({ text: { type: 'plain_text', text: l.name }, value: l.name }))
         }
       ]
     }
