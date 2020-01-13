@@ -3,6 +3,18 @@
 Now all the Blueprints examples have been updated with new Slack platform features. So what are the *diffs* in this updated example?
 
 ---
+## Changes made in January 2020
+
+### Bot scopes
+
+*Major updates!: This requires to update your scopes in App Management!*
+
+We have intruduced more granular OAuth permissions for the apps that uses a bot token. Now, this sample app requires the scopes, `incoming-webhook`, `chat:write`, `im:write`, where it used to require only `bot` scope.
+
+To learn more about the change, please refer [Migration guide for classic Slack apps](https://api.slack.com/authentication/migration).
+
+---
+
 ## Changes made in December 2019
 
 ## OAuth Token

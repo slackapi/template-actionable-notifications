@@ -1,11 +1,6 @@
 # Actionable notifications template
 
-> :sparkles: *Updated December 2019: As we have introduced some new features, this tutorial and the code samples have been updated!*
-
-Changes:
-  * Using bot token (xoxb) instead of the user token
-  * The bot permission scopes have become more granular
-  * Block Kit is replacing the previous way to compose message UI
+> :sparkles: *Updated January 2020: As we have introduced some new features, this tutorial and the code samples have been updated!*
 
 Read [diff.md](diff.md) for more info!
 

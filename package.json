@@ -1,7 +1,7 @@
 {
   "name": "actionable-notification-template",
   "private": true,
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Sample Slack app that shows how incoming webhooks and interactive messages can be used to build a simple helpdesk integration",
   "author": "Sachin Ranchod <opensource@slack-corp.com>",
   "contributors": [
@@ -14,6 +14,10 @@
       "name": "Tomomi Imura",
       "email": "opensource@slack.com",
       "url": "https://girliemac.com"
+    },
+    {
+      "name": "David Pichsenmeister",
+      "email": "opensource@slack.com" 
     }
   ],
   "scripts": {
