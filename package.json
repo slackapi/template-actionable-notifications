@@ -27,10 +27,10 @@
   },
   "dependencies": {
     "axios": "^0.19.0",
-    "body-parser": "^1.19.0",
+    "body-parser": "^1.20.1",
     "debug": "^4.1.1",
     "dotenv": "^6.2.0",
-    "express": "^4.17.1",
+    "express": "^4.18.2",
     "node-json-db": "^1.0.3",
     "querystring": "^0.2.0",
     "tsscmp": "^1.0.6"
